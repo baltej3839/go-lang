@@ -1,0 +1,791 @@
+Perfect. You're past the beginner stage of interfaces now.
+
+At this point, you should stop doing `Animal`, `Dog`, `Cat` exercises and start doing exercises that mirror real Go services.
+
+Here are some progressively harder production-style exercises.
+
+---
+
+# Exercise 1: User Repository
+
+You're building a user service.
+
+The service needs to:
+
+```text
+Create User
+Get User
+Delete User
+```
+
+Today data is stored in:
+
+```text
+PostgreSQL
+```
+
+Later:
+
+```text
+MongoDB
+```
+
+Later:
+
+```text
+In-Memory Storage (for tests)
+```
+
+### Task
+
+Design:
+
+```text
+UserService
+UserRepository
+PostgresRepository
+MongoRepository
+MemoryRepository
+```
+
+Questions:
+
+* Which type stores the interface?
+* What methods belong in the interface?
+* Why shouldn't UserService know about Postgres?
+
+---
+
+# Exercise 2: Cache Layer
+
+You have a product service.
+
+Every request currently hits the database.
+
+Management wants caching.
+
+Possible caches:
+
+```text
+Redis
+Memcached
+InMemoryCache
+```
+
+### Task
+
+Design:
+
+```text
+ProductService
+Cache
+RedisCache
+MemcachedCache
+```
+
+Think:
+
+```text
+ProductService
+     |
+     +--> Cache
+```
+
+What capability does every cache provide?
+
+---
+
+# Exercise 3: Payment Retry System
+
+A payment fails.
+
+The system retries it.
+
+Retry strategies:
+
+```text
+Immediate Retry
+Exponential Backoff
+Fixed Delay Retry
+```
+
+### Task
+
+Design:
+
+```text
+RetryStrategy
+ImmediateRetry
+BackoffRetry
+FixedDelayRetry
+PaymentService
+```
+
+Question:
+
+Should PaymentService care which retry strategy is being used?
+
+---
+
+# Exercise 4: Search Engine
+
+An e-commerce platform supports search.
+
+Possible engines:
+
+```text
+ElasticSearch
+Algolia
+Meilisearch
+```
+
+### Task
+
+Design:
+
+```text
+SearchEngine
+ProductSearchService
+```
+
+Question:
+
+What capability is common to all search engines?
+
+---
+
+# Exercise 5: Feature Flags
+
+You want to enable features dynamically.
+
+Providers:
+
+```text
+LaunchDarkly
+ConfigCat
+DatabaseFeatureFlag
+```
+
+### Task
+
+Design:
+
+```text
+FeatureFlagProvider
+FeatureService
+```
+
+Question:
+
+What should the interface expose?
+
+---
+
+# Exercise 6: File Upload System
+
+Users upload files.
+
+Storage options:
+
+```text
+AWS S3
+Google Cloud Storage
+Local Disk
+```
+
+### Task
+
+Design:
+
+```text
+Storage
+UploadService
+S3Storage
+GCSStorage
+DiskStorage
+```
+
+This is one of the most common interface uses in production Go.
+
+---
+
+# Exercise 7: Message Queue
+
+Orders are processed asynchronously.
+
+Possible queues:
+
+```text
+RabbitMQ
+Kafka
+AWS SQS
+```
+
+### Task
+
+Design:
+
+```text
+Queue
+OrderPublisher
+```
+
+Question:
+
+What methods belong in Queue?
+
+---
+
+# Exercise 8: Authentication
+
+Users can authenticate through:
+
+```text
+JWT
+Session Cookies
+OAuth
+```
+
+### Task
+
+Design:
+
+```text
+Authenticator
+AuthService
+```
+
+Question:
+
+What responsibility belongs to the interface?
+
+---
+
+# Exercise 9: Notifications (Multi-Channel)
+
+When an order ships:
+
+```text
+Send Email
+Send SMS
+Send Push Notification
+```
+
+Unlike the audit exercise, here all channels should execute.
+
+### Task
+
+Design:
+
+```text
+Notifier
+EmailNotifier
+SMSNotifier
+PushNotifier
+NotificationService
+```
+
+Hint:
+
+You'll likely end up with:
+
+```go
+[]Notifier
+```
+
+similar to your audit logger solution.
+
+---
+
+# Exercise 10: External AI Provider
+
+Your application uses AI.
+
+Providers:
+
+```text
+OpenAI
+Anthropic
+Gemini
+Local LLM
+```
+
+### Task
+
+Design:
+
+```text
+AIProvider
+ChatService
+```
+
+Question:
+
+What should ChatService know about the provider?
+
+What should it not know?
+
+---
+
+# Exercise 11 (Most Important)
+
+Build a complete Booking System.
+
+Entities:
+
+```text
+BookingService
+BookingRepository
+PaymentProcessor
+Notifier
+```
+
+Possible implementations:
+
+```text
+PostgresBookingRepo
+MemoryBookingRepo
+
+StripeProcessor
+RazorpayProcessor
+
+EmailNotifier
+SMSNotifier
+```
+
+Flow:
+
+```text
+Create Booking
+      |
+      +--> Save Booking
+      |
+      +--> Charge Payment
+      |
+      +--> Send Notification
+```
+
+### Goal
+
+Make BookingService depend only on interfaces.
+
+This exercise combines almost everything you've learned:
+
+```text
+Service Struct
+      |
+      +--> Repository Interface
+      |
+      +--> Payment Interface
+      |
+      +--> Notification Interface
+```
+
+---
+
+If you're targeting production Go backend roles, I would do them in this order:
+
+```text
+1. User Repository
+2. File Upload System
+3. Message Queue
+4. Payment Retry Strategy
+5. Booking System
+```
+
+Those five patterns show up constantly in real Go codebases.
+
+
+=====================================================================================
+
+
+That's a great way to learn because Java developers use interfaces **a lot**, sometimes even more than Go developers.
+
+I'll give you exercises that come straight out of a Java/Spring mindset, but your task is to solve them in idiomatic Go.
+
+---
+
+# Exercise 1: Notification Service
+
+A Java developer might write:
+
+```text id="5owxb5"
+NotificationService
+```
+
+and support:
+
+```text id="9j6xxl"
+Email
+SMS
+Push Notification
+```
+
+When a user signs up:
+
+```text id="ezyymr"
+NotificationService
+      |
+      +--> Send notification
+```
+
+### Your task
+
+Design:
+
+```text id="u0k71e"
+Notifier interface
+
+EmailNotifier
+SMSNotifier
+PushNotifier
+
+NotificationService
+```
+
+Question:
+
+```text id="8hf3d4"
+Should NotificationService store:
+
+Notifier
+or
+[]Notifier
+```
+
+and why?
+
+---
+
+# Exercise 2: Tax Calculator Strategy
+
+A Java developer would often use the Strategy Pattern.
+
+Countries:
+
+```text id="0jv0z0"
+India
+USA
+Canada
+```
+
+Each has a different tax calculation.
+
+The checkout service should not know tax formulas.
+
+### Your task
+
+Design:
+
+```text id="lgj3u0"
+TaxCalculator
+
+IndiaTaxCalculator
+USATaxCalculator
+CanadaTaxCalculator
+
+CheckoutService
+```
+
+Question:
+
+Who owns the interface?
+
+---
+
+# Exercise 3: Document Exporter
+
+Users can export reports as:
+
+```text id="ykw0h9"
+PDF
+Excel
+CSV
+```
+
+Java developers often create:
+
+```text id="c39m8x"
+Exporter
+```
+
+implementations.
+
+### Your task
+
+Design:
+
+```text id="c1nrhm"
+Exporter
+
+PDFExporter
+ExcelExporter
+CSVExporter
+
+ReportService
+```
+
+Question:
+
+How does ReportService avoid knowing file formats?
+
+---
+
+# Exercise 4: Authentication Provider
+
+Login methods:
+
+```text id="x3h7w9"
+Google
+GitHub
+Microsoft
+```
+
+### Your task
+
+Design:
+
+```text id="itn4ga"
+AuthProvider
+
+GoogleAuth
+GithubAuth
+MicrosoftAuth
+
+AuthService
+```
+
+Question:
+
+Why should AuthService depend on AuthProvider?
+
+---
+
+# Exercise 5: Payment Gateway
+
+A very common Java interview question.
+
+Gateways:
+
+```text id="6m8mcm"
+Stripe
+Razorpay
+PayPal
+```
+
+### Your task
+
+Design:
+
+```text id="khg9y7"
+PaymentGateway
+
+StripeGateway
+RazorpayGateway
+PaypalGateway
+
+PaymentService
+```
+
+Flow:
+
+```text id="vk2y3z"
+Create order
+Charge payment
+Generate receipt
+```
+
+Question:
+
+Which responsibilities belong to the service vs the gateway?
+
+---
+
+# Exercise 6: Logging Framework
+
+Java developers often use:
+
+```text id="gkr4bn"
+Console Logger
+File Logger
+Database Logger
+```
+
+### Your task
+
+Design:
+
+```text id="j6n7yw"
+Logger
+
+ConsoleLogger
+FileLogger
+DatabaseLogger
+
+ApplicationService
+```
+
+Requirement:
+
+```text id="kpxg6d"
+Every event should be sent to all loggers.
+```
+
+Hint:
+
+```go id="d7twn9"
+[]Logger
+```
+
+---
+
+# Exercise 7: File Storage
+
+Storage backends:
+
+```text id="g5d1nf"
+AWS S3
+Google Cloud Storage
+Local Disk
+```
+
+### Your task
+
+Design:
+
+```text id="8y5qjw"
+Storage
+
+S3Storage
+GCSStorage
+DiskStorage
+
+UploadService
+```
+
+This is a real-world backend problem.
+
+---
+
+# Exercise 8: Search Strategy
+
+Search engines:
+
+```text id="5vzj4f"
+ElasticSearch
+Algolia
+MeiliSearch
+```
+
+### Your task
+
+Design:
+
+```text id="4q0v4e"
+SearchEngine
+
+ElasticSearchEngine
+AlgoliaEngine
+MeiliSearchEngine
+
+SearchService
+```
+
+Question:
+
+What capability belongs in SearchEngine?
+
+---
+
+# Exercise 9: Discount Engine
+
+Discount types:
+
+```text id="g4tmm8"
+Percentage Discount
+Fixed Discount
+Festival Discount
+```
+
+### Your task
+
+Design:
+
+```text id="8qz0hu"
+DiscountStrategy
+
+PercentageDiscount
+FixedDiscount
+FestivalDiscount
+
+CheckoutService
+```
+
+This is the classic Strategy Pattern.
+
+---
+
+# Exercise 10: Order Processing Pipeline
+
+An order goes through:
+
+```text id="m9db1n"
+Fraud Check
+Inventory Check
+Payment Check
+```
+
+Each step can:
+
+```text id="bgsm8f"
+Pass
+Fail
+```
+
+### Your task
+
+Design:
+
+```text id="nfxlb9"
+OrderStep
+
+FraudCheck
+InventoryCheck
+PaymentCheck
+
+OrderProcessor
+```
+
+Requirement:
+
+```text id="st5ew2"
+Processor should run all steps in order.
+```
+
+Hint:
+
+```go id="70fgl7"
+[]OrderStep
+```
+
+---
+
+If you want the exercise that most closely resembles how senior Go backend engineers use interfaces every day, do:
+
+```text id="gt1czh"
+#10 Order Processing Pipeline
+```
+
+because it combines:
+
+```text id="myfd9d"
+Interface
+Slice of interfaces
+Dependency injection
+Composition
+Business workflow
+```
+
+all in one problem.
+
+
