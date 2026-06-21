@@ -1,0 +1,1 @@
+Write a program that simulates a space shuttle launch system. For safety, the shuttle cannot launch until two independent systems (System A and System B) perform their final checks and send their "ready" signals to the main launch controller using unbuffered channels.

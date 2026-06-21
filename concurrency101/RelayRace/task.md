@@ -1,0 +1,2 @@
+The Relay Race
+Write a program where four runner goroutines pass a "baton" (a struct tracking total race time) sequentially to each other using unbuffered channels, ensuring each runner can only start sprinting once they receive the baton from the previous runner.

@@ -1,6 +1,9 @@
-// Create an unbuffered jobs := make(chan int) and start one worker goroutine that continuously receives numbers and prints their squares.
+// Create two worker goroutines that both receive from the same unbuffered jobs channel and print:
 
-// From main, send 1,2,3,4,5 one at a time and observe that each jobs <- n blocks until the worker performs <-jobs.
+// Worker 1 processed 3
+// Worker 2 processed 4
+
+// Observe how Go automatically distributes jobs between workers.
 
 package main
 
@@ -29,6 +32,7 @@ func main() {
 	}
 
 	close(jobs)
+	<-done
 	<-done
 
 }

@@ -45,20 +45,15 @@ func (p *Dragon) TakeDamage(amount int) {
 }
 
 
-func (p *Player) Health() {
-	fmt.Print("Health is this much")
-}
-
-
-func (p *Zombie) Health() {
-	fmt.Print("Health is this much")
-}
-
-func (p *Dragon) Health() {
-	fmt.Print("Health is this much")
-}
-
 func (p *Player) Attack(t Targeter) {
+	t.TakeDamage(5)
+}
+
+func (d *Dragon) Attack(t Targeter) {
+	t.TakeDamage(5)
+}
+
+func (z *Zombie) Attack(t Targeter) {
 	t.TakeDamage(5)
 }
 

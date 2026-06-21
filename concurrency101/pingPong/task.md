@@ -1,0 +1,1 @@
+Write a program where two player goroutines alternate hitting a ball back and forth using a single unbuffered channel acting as the table, incrementing a hit counter until a random miss occurs.
